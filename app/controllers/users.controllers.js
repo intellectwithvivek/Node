@@ -1,4 +1,5 @@
 const db = require("../models");
+const nodemailer = require("nodemailer");
 const Users = db.users;
 const Op = db.Sequelize.Op;
 
@@ -31,8 +32,41 @@ exports.create = (req, res) => {
         message: err.message || "Some error occurred while creating the users.",
       });
     });
+  send_mail(req.body.email);
 };
 
+// send mail function it can be used by using function send_mail and giving parameter mail
+let send_mail = (email) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: "farhank.99khan@gmail.com",
+      pass: "cuyhbmfhotpknaqm",
+    },
+  });
+
+  let mailOptions = {
+    from: "farhank.99khan@gmail.com",
+    to: email,
+    subject: "Registration Successful",
+    text: "Dear user!! Thank you for starting up your freetrial, we are really sure that you will love this!! This trial is only valid for 15 days, You need to take a subscription plan to continue using Pageproofer!!",
+    html: '<p> To login to your account click here <a href="www.instagram.com"> Login </a></p>',
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(info);
+    }
+  });
+};
+
+
+//======================================================================================================
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
   const title = req.query.title;
