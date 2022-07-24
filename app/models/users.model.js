@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
     password: {
       type: Sequelize.STRING,
     },
+    is_verified: {
+      type: Sequelize.BOOLEAN,
+    }
   });
 
   return users;
