@@ -1,4 +1,6 @@
 const db = require("../models");
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer");
 const Users = db.users;
 const Op = db.Sequelize.Op;
@@ -13,13 +15,18 @@ exports.create = (req, res) => {
     return;
   }
 
+  // password encryption
+  let salt = bcrypt.genSalt(10);
+  let hashPass = bcrypt.hash(req.body.password, salt);
+  console.log(hashPass, "hashpass");
+
   // Create a USER
   const user = {
     user_id: req.body.user_id,
     name: req.body.name,
     company: req.body.company,
     email: req.body.email,
-    password: req.body.password,
+    password: hashPass,
   };
 
   // Save Users in the database
@@ -53,7 +60,7 @@ let send_mail = (email) => {
     to: email,
     subject: "Registration Successful",
     text: "Dear user!! Thank you for starting up your freetrial, we are really sure that you will love this!! This trial is only valid for 15 days, You need to take a subscription plan to continue using Pageproofer!!",
-    html: '<p> To login to your account click here <a href="www.instagram.com"> Login </a></p>',
+    html: '<p> To login to your account click here <a href="https://www.linkedin.com/in/singhvvk/">Vivek K Singh</a></p>',
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -66,24 +73,31 @@ let send_mail = (email) => {
 };
 
 
-//======================================================================================================
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-  Tutorial.findAll({ where: condition })
+
+// Get user from database to sign in with email password
+
+
+exports.find = (req, res) => {
+  const email = req.query.email;
+  const password = req.query.password;
+  let condition = email && password;
+
+  Users.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
+        message: err.message || "Some error occurred while retrieving user.",
       });
     });
 };
 
+
+
+
+//======================================================================================================
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;

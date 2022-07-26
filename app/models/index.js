@@ -19,6 +19,17 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./users.model.js")(sequelize, Sequelize);
 
+db.users = require("./users.model.js")(sequelize, Sequelize);
+db.tasks = require('./tasks.model.js')(sequelize, Sequelize);
+db.comments = require("./comments.model.js")(sequelize, Sequelize);
+db.attachments = require("./attachments.model.js")(sequelize, Sequelize);
+
+try {
+  db.tasks.hasMany(db.comments, { foreignKey: "task_id", as: "comments" });
+  db.comments.belongsTo(db.tasks, { foreignKey: "task_id" });
+  
+} catch (error) {
+  console.log("Error:-", error);
+}
 module.exports = db;

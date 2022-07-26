@@ -26,11 +26,15 @@ db.sequelize
     console.log("Failed to sync db: " + err.message);
   });
 
-//  drop the table if it already exists
-db.sequelize.sync({ force: true }).then(() => {
- console.log("Drop and re-sync db.");
-});
+// migration of database
+// db.sequelize.sync({ alter: true }).then(() => {
+//  console.log("Drop and re-sync db.");
+// });
 
+//  drop the table if it already exists
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 
 // simple route
 app.get("/", (res) => {
