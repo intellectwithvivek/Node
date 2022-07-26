@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-
-const app = express();
+const app = express(),
+  bodyParser = require("body-parser"),
+  fs = require("fs");
 
 let corsOptions = {
   origin: "http://localhost:8081",
@@ -28,7 +29,7 @@ db.sequelize
 
 // migration of database
 // db.sequelize.sync({ alter: true }).then(() => {
-//  console.log("Drop and re-sync db.");
+//   console.log("Migration of database has been done successfully!");
 // });
 
 //  drop the table if it already exists
@@ -36,8 +37,47 @@ db.sequelize
 //   console.log("Drop and re-sync db.");
 // });
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
+const customCss = fs.readFileSync(process.cwd() + "/swagger.css", "utf8");
+
+// place holder for the data
+let tasks = [
+  {
+    id: 1,
+    task: "task1",
+    assignee: "assignee1000",
+    status: "completed",
+  },
+  {
+    id: 2,
+    task: "task2",
+    assignee: "assignee1001",
+    status: "completed",
+  },
+  {
+    id: 3,
+    task: "task3",
+    assignee: "assignee1002",
+    status: "completed",
+  },
+  {
+    id: 4,
+    task: "task4",
+    assignee: "assignee1000",
+    status: "completed",
+  },
+];
+
+app.use(bodyParser.json());
+app.use(
+  "/",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, { customCss })
+);
+
 // simple route
-app.get("/", (res) => {
+app.get("/api", (res) => {
   res.json({ message: "Welcome to application." });
 });
 

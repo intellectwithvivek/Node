@@ -21,6 +21,7 @@ db.sequelize = sequelize;
 
 
 db.users = require("./users.model.js")(sequelize, Sequelize);
+db.sites = require("./sites.model.js")(sequelize,Sequelize);
 db.tasks = require('./tasks.model.js')(sequelize, Sequelize);
 db.comments = require("./comments.model.js")(sequelize, Sequelize);
 db.attachments = require("./attachments.model.js")(sequelize, Sequelize);
