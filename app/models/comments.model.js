@@ -1,5 +1,3 @@
-const { users, tasks } = require(".");
-
 module.exports = (sequelize, Sequelize) => {
   const comments = sequelize.define("comments", {
     comment_id: {
@@ -12,13 +10,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
   });
-
-//   try {
-//     tasks.hasMany(comments, { foreignKey: "task_id", as: "comments" });
-//     comments.belongsTo(tasks, { foreignKey: "task_id" });
-//   } catch (error) {
-//     console.log(error, "Error");
-//   }
 
   return comments;
 };
